@@ -35,6 +35,9 @@ namespace MovieStreamingDI.Actors
                 Become(Playing);
                 Console.WriteLine("The UserActor has now become Playing.");
                 Console.WriteLine($"Now playing {message.MovieTitle}");
+
+                var playCounterActor = Context.ActorSelection("/user/Playback/PlaybackStatistics/MoviePlayCounter");
+                playCounterActor.Tell(new IncrementPlayCountMessage(message.MovieTitle));
             });
 
             Receive<StopMovieMessage>(message =>

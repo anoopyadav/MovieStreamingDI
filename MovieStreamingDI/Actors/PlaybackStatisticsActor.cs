@@ -7,7 +7,7 @@ namespace MovieStreamingDI.Actors
     {
         public PlaybackStatisticsActor()
         {
-            
+            Context.ActorOf<MoviePlayCounterActor>("MoviePlayCounter");
         }
 
         #region Lifecycle Hooks
