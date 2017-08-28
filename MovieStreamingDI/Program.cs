@@ -1,4 +1,6 @@
-﻿using Akka.Actor;
+﻿using System;
+using Akka.Actor;
+using MovieStreamingDI.Actors;
 
 namespace MovieStreamingDI
 {
@@ -8,7 +10,10 @@ namespace MovieStreamingDI
         static void Main(string[] args)
         {
             _movieStreamingActorSystem = ActorSystem.Create("MovieStreamingActorSystem");
+            Console.WriteLine("ActorSystem Created.");
+
             var playbackActorRef = _movieStreamingActorSystem.ActorOf<PlaybackActor>("Playback");
+            Console.ReadLine();
         }
     }
 }
