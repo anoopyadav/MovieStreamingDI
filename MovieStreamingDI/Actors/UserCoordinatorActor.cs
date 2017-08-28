@@ -7,7 +7,7 @@ namespace MovieStreamingDI.Actors
 {
     public class UserCoordinatorActor : ReceiveActor
     {
-        private Dictionary<int, IActorRef> _users; 
+        private readonly Dictionary<int, IActorRef> _users; 
         public UserCoordinatorActor()
         {
             _users = new Dictionary<int, IActorRef>();
@@ -15,11 +15,15 @@ namespace MovieStreamingDI.Actors
             Receive<PlayMovieMessage>(message =>
             {
                 CreateUserIfNotExists(message.UserId);
+
+                _users[message.UserId].Tell(message);
             });
 
             Receive<StopMovieMessage>(message =>
             {
                 CreateUserIfNotExists(message.UserId);
+
+                _users[message.UserId].Tell(message);
             });
         }
 
