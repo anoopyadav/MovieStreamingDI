@@ -1,13 +1,15 @@
 ﻿using System;
 using Akka.Actor;
-using MovieStreamingDI.Messages;
+using Akka.Event;
 
 namespace MovieStreamingDI.Actors
 {
     public class PlaybackActor : ReceiveActor
     {
+        private readonly ILoggingAdapter _logger;
         public PlaybackActor()
         {
+            _logger = Context.GetLogger();
             Context.ActorOf<UserCoordinatorActor>("UserCoordinator");
             Context.ActorOf<PlaybackStatisticsActor>("PlaybackStatistics");
         }
@@ -17,13 +19,13 @@ namespace MovieStreamingDI.Actors
         protected override void PreStart()
         {
             base.PreStart();
-            Console.WriteLine("PlaybackActor PreStart");
+            _logger.Info("PlaybackActor PreStart");
         }
 
         protected override void PostStop()
         {
             base.PostStop();
-            Console.WriteLine("PlaybackActor PostStop");
+            _logger.Info("PlaybackActor PostStop");
         }
 
         #endregion

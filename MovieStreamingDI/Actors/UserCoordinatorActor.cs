@@ -1,15 +1,18 @@
 ﻿using System;
 using Akka.Actor;
 using System.Collections.Generic;
+using Akka.Event;
 using MovieStreamingDI.Messages;
 
 namespace MovieStreamingDI.Actors
 {
     public class UserCoordinatorActor : ReceiveActor
     {
-        private readonly Dictionary<int, IActorRef> _users; 
+        private readonly Dictionary<int, IActorRef> _users;
+        private readonly ILoggingAdapter _logger; 
         public UserCoordinatorActor()
         {
+            _logger = Context.GetLogger();
             _users = new Dictionary<int, IActorRef>();
 
             Receive<PlayMovieMessage>(message =>
@@ -40,13 +43,13 @@ namespace MovieStreamingDI.Actors
         protected override void PreStart()
         {
             base.PreStart();
-            Console.WriteLine("UserCoordinator PreStart");
+            _logger.Info("UserCoordinator PreStart");
         }
 
         protected override void PostStop()
         {
             base.PostStop();
-            Console.WriteLine("UserCoordinator PostStop");
+            _logger.Info("UserCoordinator PostStop");
         }
 
         #endregion

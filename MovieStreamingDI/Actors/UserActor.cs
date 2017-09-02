@@ -1,14 +1,17 @@
 ﻿using System;
 using Akka.Actor;
 using MovieStreamingDI.Messages;
+using Akka.Event;
 
 namespace MovieStreamingDI.Actors
 {
     public class UserActor : ReceiveActor
     {
         private string _currentlyPlaying;
+        private ILoggingAdapter _logger;
         public UserActor()
         {
+            _logger = Context.GetLogger();
             Become(Stopped);
         }
 
@@ -16,14 +19,14 @@ namespace MovieStreamingDI.Actors
         {
             Receive<PlayMovieMessage>(message =>
             {
-                Console.WriteLine("Error: Can't play a movie while another is playing.");
+                _logger.Warning("Can't play a movie while another is playing.");
             });
 
             Receive<StopMovieMessage>(message =>
             {
                 _currentlyPlaying = null;
                 Become(Stopped);
-                Console.WriteLine("The UserActor has now become Stopped.");
+                _logger.Info("The UserActor has now become Stopped.");
             });
         }
 
@@ -33,8 +36,8 @@ namespace MovieStreamingDI.Actors
             {
                 _currentlyPlaying = message.MovieTitle;
                 Become(Playing);
-                Console.WriteLine("The UserActor has now become Playing.");
-                Console.WriteLine($"Now playing {message.MovieTitle}");
+                _logger.Info("The UserActor has now become Playing.");
+                _logger.Info($"Now playing {message.MovieTitle}");
 
                 var playCounterActor = Context.ActorSelection("/user/Playback/PlaybackStatistics/MoviePlayCounter");
                 playCounterActor.Tell(new IncrementPlayCountMessage(message.MovieTitle));
@@ -42,7 +45,7 @@ namespace MovieStreamingDI.Actors
 
             Receive<StopMovieMessage>(message =>
             {
-                Console.WriteLine("Error: Can't stop while nothing is playing.");
+                _logger.Warning("Can't stop while nothing is playing.");
             });
         }
 
@@ -51,13 +54,13 @@ namespace MovieStreamingDI.Actors
         protected override void PreStart()
         {
             base.PreStart();
-            Console.WriteLine("UserActor Prestart");
+            _logger.Info("UserActor Prestart");
         }
 
         protected override void PostStop()
         {
             base.PostStop();
-            Console.WriteLine("UserActor PostStop");
+            _logger.Info("UserActor PostStop");
         }
 
         #endregion
