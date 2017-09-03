@@ -3,6 +3,7 @@ using System.Threading;
 using Akka.Actor;
 using MovieStreamingDI.Actors;
 using MovieStreamingDI.Messages;
+using NLog;
 
 namespace MovieStreamingDI
 {
@@ -12,11 +13,8 @@ namespace MovieStreamingDI
         static void Main(string[] args)
         {
             _movieStreamingActorSystem = ActorSystem.Create("MovieStreamingActorSystem");
-            Console.WriteLine("ActorSystem Created.");
 
             var playbackActorRef = _movieStreamingActorSystem.ActorOf<PlaybackActor>("Playback");
-
-            Console.WriteLine("Usage: <start/stop>,<UserId>,<MovieTitle>");
 
             while (true)
             {
