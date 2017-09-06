@@ -41,6 +41,9 @@ namespace MovieStreamingDI.Actors
 
                 var playCounterActor = Context.ActorSelection("/user/Playback/PlaybackStatistics/MoviePlayCounter");
                 playCounterActor.Tell(new IncrementPlayCountMessage(message.MovieTitle));
+                var trendingMoviesActor =
+                    Context.ActorSelection("/user/Playback/PlaybackStatistics/TrendingMovies");
+                trendingMoviesActor.Tell(new IncrementPlayCountMessage(message.MovieTitle));
             });
 
             Receive<StopMovieMessage>(message =>

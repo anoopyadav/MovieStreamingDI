@@ -1,5 +1,5 @@
-﻿using System;
-using Akka.Actor;
+﻿using Akka.Actor;
+using Akka.DI.Core;
 using Akka.Event;
 
 namespace MovieStreamingDI.Actors
@@ -12,6 +12,7 @@ namespace MovieStreamingDI.Actors
         {
             _logger = Context.GetLogger();
             Context.ActorOf<MoviePlayCounterActor>("MoviePlayCounter");
+            Context.ActorOf(Context.DI().Props<TrendingMoviesActor>(), "TrendingMovies");
         }
 
         protected override SupervisorStrategy SupervisorStrategy()

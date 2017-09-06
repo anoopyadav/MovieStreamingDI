@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading;
 using Akka.Actor;
+using Akka.DI.Unity;
+using Microsoft.Practices.Unity;
 using MovieStreamingDI.Actors;
+using MovieStreamingDI.Analyzer;
 using MovieStreamingDI.Messages;
 using NLog;
 
@@ -13,6 +16,11 @@ namespace MovieStreamingDI
         static void Main(string[] args)
         {
             _movieStreamingActorSystem = ActorSystem.Create("MovieStreamingActorSystem");
+
+            var unityContainer = new UnityContainer();
+            unityContainer.RegisterType<ITrendingMoviesAnalyzer, TrendingMoviesAnalyzer>();
+            unityContainer.RegisterType<TrendingMoviesActor>();
+            var resolver = new UnityDependencyResolver(unityContainer, _movieStreamingActorSystem);
 
             var playbackActorRef = _movieStreamingActorSystem.ActorOf<PlaybackActor>("Playback");
 
